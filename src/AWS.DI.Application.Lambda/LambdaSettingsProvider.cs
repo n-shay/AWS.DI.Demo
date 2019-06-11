@@ -7,7 +7,7 @@ namespace AWS.DI.Application.Lambda
     {
         private const string SettingsSection = "Settings";
 
-        private const string EnvironmentVariableName = "EnvironmentType";
+        private const string EnvironmentVariableName = "ASPNETCORE_ENVIRONMENT";
 
         private readonly ILambdaConfiguration _configuration;
 
