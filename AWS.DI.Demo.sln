@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29001.49
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.DI.Lambda.HelloWorld", "src\AWS.DI.Lambda.HelloWorld\AWS.DI.Lambda.HelloWorld.csproj", "{FA6C3451-B221-4C84-90BD-76B66AC1BABC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.DI.Business", "src\AWS.DI.Business\AWS.DI.Business.csproj", "{A149F602-5F45-49C6-9FC3-3C5AC44BC9B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.DI.Infrastructure", "src\AWS.DI.Infrastructure\AWS.DI.Infrastructure.csproj", "{0250B01B-625D-4D9E-AC39-0D67963CF9DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWS.DI.Application", "src\AWS.DI.Application\AWS.DI.Application.csproj", "{170D898A-4ACB-423D-B0BE-BC6E80939722}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWS.DI.Application.Lambda", "src\AWS.DI.Application.Lambda\AWS.DI.Application.Lambda.csproj", "{0AD2E392-F02F-4F5B-8257-8D78B80F0CE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWS.DI.DependencyResolution", "src\AWS.DI.DependencyResolution\AWS.DI.DependencyResolution.csproj", "{716CDC57-8340-4F29-A02A-8901B94B7EC6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA6C3451-B221-4C84-90BD-76B66AC1BABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA6C3451-B221-4C84-90BD-76B66AC1BABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA6C3451-B221-4C84-90BD-76B66AC1BABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA6C3451-B221-4C84-90BD-76B66AC1BABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A149F602-5F45-49C6-9FC3-3C5AC44BC9B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A149F602-5F45-49C6-9FC3-3C5AC44BC9B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A149F602-5F45-49C6-9FC3-3C5AC44BC9B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A149F602-5F45-49C6-9FC3-3C5AC44BC9B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0250B01B-625D-4D9E-AC39-0D67963CF9DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0250B01B-625D-4D9E-AC39-0D67963CF9DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0250B01B-625D-4D9E-AC39-0D67963CF9DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0250B01B-625D-4D9E-AC39-0D67963CF9DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{170D898A-4ACB-423D-B0BE-BC6E80939722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{170D898A-4ACB-423D-B0BE-BC6E80939722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{170D898A-4ACB-423D-B0BE-BC6E80939722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{170D898A-4ACB-423D-B0BE-BC6E80939722}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD2E392-F02F-4F5B-8257-8D78B80F0CE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AD2E392-F02F-4F5B-8257-8D78B80F0CE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AD2E392-F02F-4F5B-8257-8D78B80F0CE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD2E392-F02F-4F5B-8257-8D78B80F0CE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{716CDC57-8340-4F29-A02A-8901B94B7EC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{716CDC57-8340-4F29-A02A-8901B94B7EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{716CDC57-8340-4F29-A02A-8901B94B7EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{716CDC57-8340-4F29-A02A-8901B94B7EC6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {159DFE4C-08D3-4A3A-8B07-0A5CE42498BE}
+	EndGlobalSection
+EndGlobal
