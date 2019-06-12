@@ -13,6 +13,7 @@
     <ProjectReference Include="..\AWS.DI.Application.Lambda\AWS.DI.Application.Lambda.csproj" />
     <ProjectReference Include="..\AWS.DI.Application\AWS.DI.Application.csproj" />
     <ProjectReference Include="..\AWS.DI.Business\AWS.DI.Business.csproj" />
+    <ProjectReference Include="..\AWS.DI.Core\AWS.DI.Core.csproj" />
     <ProjectReference Include="..\AWS.DI.Infrastructure\AWS.DI.Infrastructure.csproj" />
   </ItemGroup>
 

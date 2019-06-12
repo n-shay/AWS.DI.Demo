@@ -9,11 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.DI.Business", "src\AWS.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.DI.Infrastructure", "src\AWS.DI.Infrastructure\AWS.DI.Infrastructure.csproj", "{0250B01B-625D-4D9E-AC39-0D67963CF9DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWS.DI.Application", "src\AWS.DI.Application\AWS.DI.Application.csproj", "{170D898A-4ACB-423D-B0BE-BC6E80939722}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.DI.Application", "src\AWS.DI.Application\AWS.DI.Application.csproj", "{170D898A-4ACB-423D-B0BE-BC6E80939722}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWS.DI.Application.Lambda", "src\AWS.DI.Application.Lambda\AWS.DI.Application.Lambda.csproj", "{0AD2E392-F02F-4F5B-8257-8D78B80F0CE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.DI.Application.Lambda", "src\AWS.DI.Application.Lambda\AWS.DI.Application.Lambda.csproj", "{0AD2E392-F02F-4F5B-8257-8D78B80F0CE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWS.DI.DependencyResolution", "src\AWS.DI.DependencyResolution\AWS.DI.DependencyResolution.csproj", "{716CDC57-8340-4F29-A02A-8901B94B7EC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.DI.DependencyResolution", "src\AWS.DI.DependencyResolution\AWS.DI.DependencyResolution.csproj", "{716CDC57-8340-4F29-A02A-8901B94B7EC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWS.DI.Core", "src\AWS.DI.Core\AWS.DI.Core.csproj", "{3C3FF87F-47E0-485F-9C81-F5C101239419}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{716CDC57-8340-4F29-A02A-8901B94B7EC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{716CDC57-8340-4F29-A02A-8901B94B7EC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{716CDC57-8340-4F29-A02A-8901B94B7EC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C3FF87F-47E0-485F-9C81-F5C101239419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C3FF87F-47E0-485F-9C81-F5C101239419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C3FF87F-47E0-485F-9C81-F5C101239419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C3FF87F-47E0-485F-9C81-F5C101239419}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

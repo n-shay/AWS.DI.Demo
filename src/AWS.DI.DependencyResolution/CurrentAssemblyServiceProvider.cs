@@ -1,29 +1,25 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using SimpleInjector;
 using SimpleInjector.Packaging;
 
 namespace AWS.DI.DependencyResolution
 {
-    public class CurrentAssemblyServiceProvider : IServiceProvider
+    public class CurrentAssemblyServiceProvider : ServiceProviderBase
     {
-        private readonly Container _container;
-
-        public CurrentAssemblyServiceProvider()
-        {
-            _container = new Container();
-
-            //var types = this.GetType().Assembly.GetTypes()
+        protected override void LoadPackagesInternal(Container container)
+        {   
+            //var packages = this.GetType().Assembly.GetTypes()
             //    .Where(t => typeof(IPackage).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface)
+            //    .Select(t => (IPackage)Activator.CreateInstance(t))
             //    .ToList();
 
-            _container.RegisterPackages(new[] {this.GetType().Assembly});
+            //foreach (var package in packages)
+            //{
+            //    package.RegisterServices(container);
+            //}
 
-            _container.Verify();
-        }
-        public T Resolve<T>()
-            where T : class
-        {
-            return _container.GetInstance<T>();
+            container.RegisterPackages(new[] { this.GetType().Assembly });
         }
     }
 }
