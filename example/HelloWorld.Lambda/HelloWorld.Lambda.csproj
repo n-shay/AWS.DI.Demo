@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TRG.Extensions.Lambda\TRG.Extensions.Lambda.csproj" />
+    <ProjectReference Include="..\..\src\TRG.Extensions.Logging.Serilog.Lambda\TRG.Extensions.Logging.Serilog.Lambda.csproj" />
+    <ProjectReference Include="..\HelloWorld.Business\HelloWorld.Business.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
