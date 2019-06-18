@@ -30,7 +30,7 @@ namespace HelloWorld.Lambda
             protected override void Configure(IDependencyCollection dependencyCollection, IConfigurationProvider configurationProvider)
             {
                 dependencyCollection.UseCurrentDomain()
-                    //dependencyCollection.UsePackage<DependencyResolution.HelloWorldPackage>()
+                //dependencyCollection.UsePackage<DependencyResolution.HelloWorldPackage>()
                     .UseSerilog(configurationProvider);
             }
         }
