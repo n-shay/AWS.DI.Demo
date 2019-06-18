@@ -18,7 +18,7 @@ namespace HelloWorld.Lambda.Business.Concrete
         {
             _logger.Information("Starting speaking...");
 
-            var result = _settingsProvider.GetAppSettings<Settings>().Message;
+            var result = _settingsProvider.GetAppSettings<Settings>()?.Message?.HelloWorld;
 
             _logger.Information("Finished speaking!");
             

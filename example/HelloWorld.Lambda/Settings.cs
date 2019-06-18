@@ -2,6 +2,12 @@
 {
     public class Settings
     {
-        public string Message { get; set; }
+        public Message Message { get; set; }
+
+    }
+
+    public class Message
+    {
+        public string HelloWorld { get; set; }
     }
 }
