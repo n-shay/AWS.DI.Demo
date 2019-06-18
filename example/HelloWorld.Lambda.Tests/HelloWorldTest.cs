@@ -29,41 +29,5 @@ namespace AWS.DI.Lambda.Tests
             Assert.NotNull(response);
             Assert.Equal("Hello World!", response.Message);
         }
-
-        [Fact]
-        public async Task ColdStartTesting()
-        {
-            const int executionCount = 100;
-
-            var tasks = Enumerable.Range(0, executionCount)
-                .Select(i => Task.Run(() =>
-                {
-                    var result = InvokeHandler();
-
-                    _output.WriteLine($"[{i}] Executed in {result:N0}ms");
-
-                    return result;
-                }))
-                .ToList();
-
-            var results = await Task.WhenAll(tasks);
-
-            if(results.Length > 0)
-                _output.WriteLine($"Average execution: {results.Average():N0}ms");
-        }
-
-        private static long InvokeHandler()
-        {
-            var context = new TestLambdaContext();
-
-            var sw = Stopwatch.StartNew();
-
-            var function = new Startup();
-            function.Handle(null, context);
-
-            sw.Stop();
-            
-            return sw.ElapsedMilliseconds;
-        }
     }
 }
