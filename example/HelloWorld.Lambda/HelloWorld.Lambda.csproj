@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\TRG.Extensions.Lambda\TRG.Extensions.Lambda.csproj" />
     <ProjectReference Include="..\..\src\TRG.Extensions.Logging.Serilog.Lambda\TRG.Extensions.Logging.Serilog.Lambda.csproj" />
-    <ProjectReference Include="..\HelloWorld.Business\HelloWorld.Business.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.Development.json">

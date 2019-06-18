@@ -1,8 +1,7 @@
-﻿using HelloWorld.Application;
-using TRG.Extensions.Logging;
+﻿using TRG.Extensions.Logging;
 using TRG.Extensions.Settings;
 
-namespace HelloWorld.Business.Concrete
+namespace HelloWorld.Lambda.Business.Concrete
 {
     public class SpeakService : ISpeakService
     {

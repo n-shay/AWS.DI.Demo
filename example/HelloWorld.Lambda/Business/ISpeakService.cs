@@ -1,4 +1,4 @@
-﻿namespace HelloWorld.Business
+﻿namespace HelloWorld.Lambda.Business
 {
     public interface ISpeakService
     {

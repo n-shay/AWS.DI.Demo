@@ -1,5 +1,5 @@
 using Amazon.Lambda.Core;
-using HelloWorld.Business;
+using HelloWorld.Lambda.Business;
 using HelloWorld.Lambda.Models;
 using TRG.Extensions.DependencyInjection;
 using TRG.Extensions.Lambda;

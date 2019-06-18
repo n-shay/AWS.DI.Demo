@@ -1,5 +1,5 @@
-﻿using HelloWorld.Business;
-using HelloWorld.Business.Concrete;
+﻿using HelloWorld.Lambda.Business;
+using HelloWorld.Lambda.Business.Concrete;
 using SimpleInjector;
 using SimpleInjector.Packaging;
 

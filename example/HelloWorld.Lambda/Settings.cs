@@ -1,4 +1,4 @@
-﻿namespace HelloWorld.Application
+﻿namespace HelloWorld.Lambda
 {
     public static class Settings
     {
