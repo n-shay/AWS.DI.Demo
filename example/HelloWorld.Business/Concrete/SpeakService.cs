@@ -22,7 +22,7 @@ namespace HelloWorld.Business.Concrete
             var result = _settingsProvider.Get(Settings.Message.HelloWorld, "N/A");
 
             _logger.Information("Finished speaking!");
-
+            
             return result;
         }
     }
