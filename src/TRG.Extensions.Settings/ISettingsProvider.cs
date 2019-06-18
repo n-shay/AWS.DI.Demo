@@ -2,8 +2,10 @@
 {
     public interface ISettingsProvider
     {
-        T Get<T>(string key, T defaultValue = default(T));
+        T GetValue<T>(string key, T defaultValue = default(T));
 
         string GetConnectionString(string name);
+
+        T GetAppSettings<T>();
     }
 }

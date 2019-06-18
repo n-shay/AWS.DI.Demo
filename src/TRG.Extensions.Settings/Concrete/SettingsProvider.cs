@@ -5,21 +5,20 @@ namespace TRG.Extensions.Settings.Concrete
 {
     public class SettingsProvider : ISettingsProvider
     {
-        private readonly IConfigurationProvider _configurationProvider;
-
         private const string SettingsSection = "Settings";
+
+        private readonly IConfigurationProvider _configurationProvider;
 
         public SettingsProvider(IConfigurationProvider configurationProvider)
         {
             _configurationProvider = configurationProvider;
         }
 
-        public T Get<T>(string key, T defaultValue = default)
+        public T GetValue<T>(string key, T defaultValue = default)
         {
             try
             {
                 return _configurationProvider.Get()
-                    .GetSection(SettingsSection)
                     .GetValue(key, defaultValue);
             }
             catch (Exception ex)
@@ -32,6 +31,15 @@ namespace TRG.Extensions.Settings.Concrete
         {
             return _configurationProvider.Get()
                 .GetConnectionString(name);
+        }
+
+        public T GetAppSettings<T>()
+        {
+            var settings = _configurationProvider.Get()
+                .GetSection(SettingsSection)
+                .Get<T>();
+
+            return settings;
         }
     }
 }
