@@ -2,6 +2,6 @@
 {
     public class Input
     {
-        
+        public int Id { get; set; }
     }
 }

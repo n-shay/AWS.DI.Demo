@@ -32,7 +32,7 @@ namespace TRG.Extensions.Lambda
                 Configure(collection, _configurationProvider);
 
                 var serviceProvider = new ServiceProvider(collection);
-                return new ExecutionContext(serviceProvider);
+                return new ExecutionContext(serviceProvider, _configurationProvider);
             }
         }
     }

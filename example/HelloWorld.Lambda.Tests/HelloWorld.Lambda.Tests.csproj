@@ -13,6 +13,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\TRG.Extensions.Diagnosis\TRG.Extensions.Diagnosis.csproj" />
     <ProjectReference Include="..\HelloWorld.Lambda\HelloWorld.Lambda.csproj" />
   </ItemGroup>
 </Project>

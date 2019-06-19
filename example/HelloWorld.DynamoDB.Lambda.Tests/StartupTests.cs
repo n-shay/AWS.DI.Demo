@@ -1,22 +1,25 @@
+using System;
+using System.Threading.Tasks;
 using Amazon.Lambda.TestUtilities;
-using HelloWorld.Lambda.Models;
+using HelloWorld.DynamoDB.Lambda.Models;
 using TRG.Extensions.Diagnosis;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace HelloWorld.Lambda.Tests
+namespace HelloWorld.DynamoDB.Lambda.Tests
 {
-    public class HelloWorldTest
+    public class StartupTests
     {
         private readonly ITestOutputHelper _output;
 
-        public HelloWorldTest(ITestOutputHelper output)
+        public StartupTests(ITestOutputHelper output)
         {
             _output = output;
         }
 
+
         [Fact]
-        public void InstantiatedAndExecutedOnce_Success()
+        public async Task Test1()
         {
             Output response;
             var context = new TestLambdaContext();
@@ -26,11 +29,14 @@ namespace HelloWorld.Lambda.Tests
                 var function = new Startup();
                 bt.Snap("Startup");
 
-                response = function.Handle(null, context);
+                response = await function.HandleAsync(null, context);
             }
 
-            Assert.NotNull(response);
-            Assert.Equal("Hello World!", response.Message);
+            Assert.NotNull(response?.Value);
+            Assert.Equal(1, response.Value.Id);
+            Assert.Equal(15, response.Value.Num);
+            Assert.Equal("This is the text", response.Value.Text);
+
         }
     }
 }

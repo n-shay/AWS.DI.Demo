@@ -1,4 +1,5 @@
-﻿using TRG.Extensions.Logging;
+﻿using System;
+using TRG.Extensions.Logging;
 using TRG.Extensions.Settings;
 
 namespace HelloWorld.DynamoDB.Lambda.Business.Concrete
@@ -16,13 +17,14 @@ namespace HelloWorld.DynamoDB.Lambda.Business.Concrete
 
         public string SaySomething()
         {
-            _logger.Information("Starting speaking...");
+            throw new NotImplementedException();
+            //_logger.Information("Starting speaking...");
 
-            var result = _settingsProvider.GetAppSettings<Settings>();
+            //var result = _settingsProvider.GetAppSettings<Settings>();
 
-            _logger.Information("Finished speaking!");
+            //_logger.Information("Finished speaking!");
             
-            return result;
+            //return result;
         }
     }
 }

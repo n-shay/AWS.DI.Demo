@@ -8,7 +8,7 @@
     "HelloWorld.DynamoDB" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.Startup::Handle",
+        "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.Startup::HandleAsync",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
         "Description": "Retrieve from DynamoDB function",

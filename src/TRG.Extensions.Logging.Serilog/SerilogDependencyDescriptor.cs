@@ -12,7 +12,7 @@ namespace TRG.Extensions.Logging.Serilog
                     typeof(ILogger),
                     c => typeof(SerilogLogger<>).MakeGenericType(c.Consumer.ImplementationType),
                     SimpleInjector.Lifestyle.Singleton,
-                    c => true);
+                    c => c.ImplementationType != typeof(object));
             });
         }
     }
