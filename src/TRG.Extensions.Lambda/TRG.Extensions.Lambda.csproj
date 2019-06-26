@@ -13,6 +13,7 @@
     <ProjectReference Include="..\TRG.Extensions.DependencyInjection\TRG.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\TRG.Extensions.Settings.Lambda\TRG.Extensions.Settings.Lambda.csproj" />
     <ProjectReference Include="..\TRG.Extensions.Settings\TRG.Extensions.Settings.csproj" />
+    <ProjectReference Include="..\TRG.Extensions.Threading\TRG.Extensions.Threading.csproj" />
   </ItemGroup>
 
 </Project>

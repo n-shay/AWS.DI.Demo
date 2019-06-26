@@ -10,6 +10,7 @@ namespace TRG.Extensions.Lambda
 
         protected Handler(Initializer initializer)
         {
+            LambdaLifestyle.Initialized();
             Context = initializer.Build();
         }
 

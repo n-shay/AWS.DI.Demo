@@ -1,4 +1,5 @@
-﻿using TRG.Extensions.DependencyInjection;
+﻿using Amazon.Lambda.Core;
+using TRG.Extensions.DependencyInjection;
 using TRG.Extensions.Settings;
 
 namespace TRG.Extensions.Lambda
@@ -14,5 +15,7 @@ namespace TRG.Extensions.Lambda
         public IServiceProvider ServiceProvider { get; }
 
         public IConfigurationProvider ConfigurationProvider { get; }
+
+        public ILambdaContext Lambda { get; internal set; }
     }
 }

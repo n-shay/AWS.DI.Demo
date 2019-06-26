@@ -4,9 +4,9 @@ namespace TRG.Extensions.Logging.Serilog
 {
     internal class SerilogDependencyDescriptor : DependencyDescriptor
     {
-        public SerilogDependencyDescriptor()
+        protected override void Register(RegistrationBuilder builder)
         {
-            IncludeRegister(container =>
+            builder.Include(container =>
             {
                 container.RegisterConditional(
                     typeof(ILogger),

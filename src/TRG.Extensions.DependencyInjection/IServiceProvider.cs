@@ -1,8 +1,11 @@
-﻿namespace TRG.Extensions.DependencyInjection
+﻿using System;
+
+namespace TRG.Extensions.DependencyInjection
 {
     public interface IServiceProvider
     {
-        T Resolve<T>()
-            where T : class;
+        T Resolve<T>();
+
+        object Resolve(Type serviceType);
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using TRG.Extensions.DataAccess;
 
 namespace HelloWorld.DynamoDB.Lambda.Domain.Models
 {
     [DynamoDBTable("FooTable")]
-    public class SomeFoo //: IKeyedEntity<int>
+    public class SomeFoo: IKeyedEntity<int>
     {
         [DynamoDBHashKey("SomeId")]
         public int Id { get; set; }

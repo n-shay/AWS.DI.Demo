@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TRG.Extensions.DataAccess.DynamoDB\TRG.Extensions.DataAccess.DynamoDB.csproj" />
+    <ProjectReference Include="..\TRG.Extensions.DependencyInjection\TRG.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\TRG.Extensions.Lambda\TRG.Extensions.Lambda.csproj" />
+  </ItemGroup>
+
+</Project>

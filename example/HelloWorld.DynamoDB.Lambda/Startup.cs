@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
-using Amazon.Lambda.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using HelloWorld.DynamoDB.Lambda.Domain;
 using HelloWorld.DynamoDB.Lambda.Domain.Models;
 using HelloWorld.DynamoDB.Lambda.Models;
 using Newtonsoft.Json;
+using TRG.Extensions.DataAccess;
+using TRG.Extensions.DataAccess.DynamoDB.Lambda;
 using TRG.Extensions.DependencyInjection;
 using TRG.Extensions.Lambda;
 using TRG.Extensions.Logging.Serilog.Lambda;
@@ -18,19 +21,44 @@ namespace HelloWorld.DynamoDB.Lambda
         {
         }
 
-        public override async Task<Output> HandleAsync(Input input, ILambdaContext context)
+        protected override async Task<Output> HandleAsync(Input input)
         {
             SomeFoo foo;
-            using (IAmazonDynamoDB client = new AmazonDynamoDBClient())
+
+            // New concept:
+            var unitOfWorkFactory = Context.ServiceProvider.Resolve<IUnitOfWorkFactory>();
+
+            using (var unitOfWork = unitOfWorkFactory.Create<IFooUnitOfWork>())
             {
-                using (var dbContext = new DynamoDBContext(client))
+                if (input.Id != null)
                 {
-                    foo = await dbContext.LoadAsync<SomeFoo>(input.Id);
+                    foo = await unitOfWork.Foos.GetByKeyAsync(input.Id.Value);
+
+                    Context.Lambda.Logger.Log($"{JsonConvert.SerializeObject(foo)}{Environment.NewLine}");
+                }
+                else
+                {
+                    List<SomeFoo> result;
+                    if (input.Num != null)
+                    {
+                        result = (await unitOfWork.Foos
+                                .QueryByNumAndTextAsync(input.Num.Value, input.TextSearch))
+                            .ToList();
+                    }
+                    else
+                    {
+                        result = (await unitOfWork.Foos
+                                .ScanAsync(input.Id, input.Num, input.TextSearch))
+                            .ToList();
+
+                    }
+
+                    result.ForEach(r =>
+                        Context.Lambda.Logger.Log($"{JsonConvert.SerializeObject(r)}{Environment.NewLine}"));
+
+                    foo = result.FirstOrDefault();
                 }
             }
-
-            var data = JsonConvert.SerializeObject(foo);
-            context.Logger.Log(data);
 
             return new Output(foo);
         }
@@ -40,7 +68,8 @@ namespace HelloWorld.DynamoDB.Lambda
             protected override void Configure(IDependencyCollection dependencyCollection, IConfigurationProvider configurationProvider)
             {
                 dependencyCollection.UseCurrentDomain()
-                    .UseSerilog(configurationProvider);
+                    .UseSerilog(configurationProvider)
+                    .UseDynamoDB();
             }
         }
     }

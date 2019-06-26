@@ -4,9 +4,9 @@ namespace TRG.Extensions.DependencyInjection
 {
     internal class DependencyDescriptor<T> : DependencyDescriptor where T: IPackage, new()
     {
-        public DependencyDescriptor()
+        protected override void Register(RegistrationBuilder builder)
         {
-            IncludePackage<T>();
+            builder.Use<T>();
         }
     }
 }

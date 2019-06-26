@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.101.25" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TRG.Extensions.DataAccess\TRG.Extensions.DataAccess.csproj" />
+    <ProjectReference Include="..\TRG.Extensions.Logging\TRG.Extensions.Logging.csproj" />
+  </ItemGroup>
+
+</Project>

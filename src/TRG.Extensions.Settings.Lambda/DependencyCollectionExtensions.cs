@@ -11,11 +11,18 @@ namespace TRG.Extensions.Settings.Lambda
             return collection;
         }
 
-        public class DependencyDescriptor : DependencyInjection.DependencyDescriptor
+        internal class DependencyDescriptor : DependencyInjection.DependencyDescriptor
         {
+            private readonly IConfigurationProvider _configurationProvider;
+
             public DependencyDescriptor(IConfigurationProvider configurationProvider)
             {
-                IncludeRegister(c => c.RegisterInstance<IConfigurationProvider>(configurationProvider));
+                _configurationProvider = configurationProvider;
+            }
+
+            protected override void Register(RegistrationBuilder builder)
+            {
+                builder.Include(c => c.RegisterInstance(_configurationProvider));
             }
         }
     }

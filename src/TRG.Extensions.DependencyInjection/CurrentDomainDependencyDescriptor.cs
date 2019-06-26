@@ -5,9 +5,9 @@ namespace TRG.Extensions.DependencyInjection
 {
     internal class CurrentDomainDependencyDescriptor : DependencyDescriptor 
     {
-        public CurrentDomainDependencyDescriptor()
+        protected override void Register(RegistrationBuilder builder)
         {
-            IncludeRegister(container => container.RegisterPackages(AppDomain.CurrentDomain.GetAssemblies()));
+            builder.Include(container => container.RegisterPackages(AppDomain.CurrentDomain.GetAssemblies()));
         }
     }
 }

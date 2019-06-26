@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SimpleInjector;
 
 namespace TRG.Extensions.DependencyInjection
@@ -17,7 +18,21 @@ namespace TRG.Extensions.DependencyInjection
         {
             _container = new Container();
 
-            foreach (var descriptor in dependencyDescriptors)
+            var list = (options.SupportPriority
+                ? dependencyDescriptors
+                : dependencyDescriptors.OrderByDescending(dd => dd.Priority)).ToList();
+
+            if (options.SelfRegister)
+            {
+                list.Add(new SelfDependencyDescriptor(this));
+            }
+
+            foreach (var descriptor in list)
+            {
+                descriptor.Configure(_container);
+            }
+
+            foreach (var descriptor in list)
             {
                 descriptor.Register(_container);
             }
@@ -29,9 +44,13 @@ namespace TRG.Extensions.DependencyInjection
         }
 
         public T Resolve<T>()
-            where T : class
         {
-            return _container.GetInstance<T>();
+            return (T) Resolve(typeof(T));
+        }
+
+        public object Resolve(Type serviceType)
+        {
+            return _container.GetInstance(serviceType);
         }
 
         public void Dispose()

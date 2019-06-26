@@ -7,18 +7,15 @@ namespace TRG.Extensions.Settings
     {
         public static IDependencyCollection UseSettingProvider(this IDependencyCollection collection)
         {
-            collection.Add(new InternalDependencyDescriptor());
+            collection.Add(new DependencyDescriptor());
             return collection;
         }
 
-        internal class InternalDependencyDescriptor : DependencyDescriptor
+        internal class DependencyDescriptor : DependencyInjection.DependencyDescriptor
         {
-            public InternalDependencyDescriptor()
+            protected override void Register(RegistrationBuilder builder)
             {
-                IncludeRegister(c =>
-                {
-                    c.Register<ISettingsProvider, SettingsProvider>();
-                });
+                builder.Include(c => { c.Register<ISettingsProvider, SettingsProvider>(); });
             }
         }
     }

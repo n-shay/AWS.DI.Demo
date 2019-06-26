@@ -1,4 +1,3 @@
-using Amazon.Lambda.Core;
 using HelloWorld.Lambda.Business;
 using HelloWorld.Lambda.Models;
 using TRG.Extensions.DependencyInjection;
@@ -14,7 +13,7 @@ namespace HelloWorld.Lambda
         {
         }
         
-        public override Output Handle(Input input, ILambdaContext context)
+        protected override Output Handle(Input input)
         {
             var speakService = Context.ServiceProvider.Resolve<ISpeakService>();
             var output =  new Output
