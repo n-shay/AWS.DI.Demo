@@ -5,7 +5,7 @@
   "Parameters" : {
   },
   "Resources" : {
-    "HelloWorld.DynamoDB.Search" : {
+    "Search" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
         "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.SearchFunction::HandleAsync",
@@ -20,14 +20,14 @@
           "PutResource": {
             "Type": "Api",
             "Properties": {
-              "Path": "/",
+              "Path": "/Search",
               "Method": "GET"
             }
           }
         }
       }
     },
-	"HelloWorld.DynamoDB.Item" : {
+	"Item" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
         "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.ItemFunction::HandleAsync",
@@ -42,14 +42,14 @@
           "PutResource": {
             "Type": "Api",
             "Properties": {
-              "Path": "/",
+              "Path": "/Id",
               "Method": "GET"
             }
           }
         }
       }
     },
-	"HelloWorld.DynamoDB.QueryByNum" : {
+	"QueryByNum" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
         "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.ItemByNumFunction::HandleAsync",
@@ -64,7 +64,7 @@
           "PutResource": {
             "Type": "Api",
             "Properties": {
-              "Path": "/",
+              "Path": "/Num",
               "Method": "GET"
             }
           }
