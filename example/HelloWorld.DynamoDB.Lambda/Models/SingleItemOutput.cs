@@ -2,9 +2,9 @@
 
 namespace HelloWorld.DynamoDB.Lambda.Models
 {
-    public class Output
+    public class SingleItemOutput
     {
-        public Output(SomeFoo value)
+        public SingleItemOutput(SomeFoo value)
         {
             Value = value;
         }

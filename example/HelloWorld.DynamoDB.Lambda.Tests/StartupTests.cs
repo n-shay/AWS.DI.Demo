@@ -16,26 +16,25 @@ namespace HelloWorld.DynamoDB.Lambda.Tests
         {
             _output = output;
         }
-
-
+        
         [Fact]
-        public async Task Test1()
+        public async Task SearchFunctionTest()
         {
-            Output response;
+            var searchInput = new SearchInput {Num = 15, Text = "is"};
+
+            MultiItemOutput response;
             var context = new TestLambdaContext();
 
             using (var bt = new BlockTelemeter("Test", _output.WriteLine, false))
             {
-                var function = new Startup();
+                var function = new SearchFunction();
                 bt.Snap("Startup");
 
-                response = await function.HandleAsync(null, context);
+                response = await function.HandleAsync(searchInput, context);
             }
 
             Assert.NotNull(response?.Value);
-            Assert.Equal(1, response.Value.Id);
-            Assert.Equal(15, response.Value.Num);
-            Assert.Equal("This is the text", response.Value.Text);
+            Assert.NotEmpty(response.Value);
 
         }
     }

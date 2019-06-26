@@ -1,11 +1,9 @@
 ﻿using Amazon.DynamoDBv2;
 using SimpleInjector;
-using SimpleInjector.Lifestyles;
-using TRG.Extensions.DependencyInjection;
 
 namespace TRG.Extensions.DataAccess.DynamoDB
 {
-    public abstract class DependencyDescriptor : DependencyInjection.DependencyDescriptor
+    public class DependencyDescriptor : DependencyInjection.DependencyDescriptor
     {
         protected override void Register(RegistrationBuilder builder)
         {
@@ -13,9 +11,14 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             {
                 container.RegisterSingleton<IAmazonDynamoDB>(() => new AmazonDynamoDBClient());
                 container.Register<IDbContext, Context>(GetContextLifestyle());
+                container.Register<IUnitOfWorkFactory, UnitOfWorkFactory>();
             });
         }
 
-        protected abstract Lifestyle GetContextLifestyle();
+        protected virtual Lifestyle GetContextLifestyle()
+        {
+            return Lifestyle.Transient;
+        }
+
     }
 }

@@ -14,5 +14,10 @@ namespace HelloWorld.DynamoDB.Lambda.Domain.Models
 
         [DynamoDBProperty("SomeString")]
         public string Text { get; set; }
+
+        public override string ToString()
+        {
+            return $"({nameof(Id)}: {Id} | {nameof(Num)}: {Num} | {nameof(Text)}: '{Text}')";
+        }
     }
 }

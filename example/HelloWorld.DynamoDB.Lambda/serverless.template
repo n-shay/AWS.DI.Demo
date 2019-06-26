@@ -5,13 +5,57 @@
   "Parameters" : {
   },
   "Resources" : {
-    "HelloWorld.DynamoDB" : {
+    "HelloWorld.DynamoDB.Search" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.Startup::HandleAsync",
+        "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.SearchFunction::HandleAsync",
         "Runtime": "dotnetcore2.1",
         "CodeUri": "",
-        "Description": "Retrieve from DynamoDB function",
+        "Description": "Search DynamoDB",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],
+        "Events": {
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+	"HelloWorld.DynamoDB.Item" : {
+      "Type" : "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.ItemFunction::HandleAsync",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "Description": "Retrieve item from DynamoDB by ID",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [ "AWSLambdaFullAccess" ],
+        "Events": {
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+	"HelloWorld.DynamoDB.QueryByNum" : {
+      "Type" : "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "HelloWorld.DynamoDB.Lambda::HelloWorld.DynamoDB.Lambda.ItemByNumFunction::HandleAsync",
+        "Runtime": "dotnetcore2.1",
+        "CodeUri": "",
+        "Description": "Query DynamoDB by Num",
         "MemorySize": 256,
         "Timeout": 30,
         "Role": null,
