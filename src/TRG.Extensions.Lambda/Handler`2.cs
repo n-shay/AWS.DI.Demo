@@ -14,9 +14,9 @@ namespace TRG.Extensions.Lambda
             LambdaLifestyle.Invoked();
             Context.Lambda = context;
 
-            return Handle(input);
+            return Execute(input);
         }
 
-        protected abstract TOutput Handle(TInput input);
+        protected abstract TOutput Execute(TInput input);
     }
 }

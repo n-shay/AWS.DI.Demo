@@ -15,9 +15,9 @@ namespace TRG.Extensions.Lambda
             LambdaLifestyle.Invoked();
             Context.Lambda = context;
 
-            return HandleAsync(input);
+            return ExecuteAsync(input);
         }
 
-        protected abstract Task<TOutput> HandleAsync(TInput input);
+        protected abstract Task<TOutput> ExecuteAsync(TInput input);
     }
 }

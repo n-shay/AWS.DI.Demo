@@ -15,7 +15,7 @@ namespace HelloWorld.DynamoDB.Lambda
         {
         }
 
-        protected override async Task<MultiItemOutput> HandleAsync(QueryByNumAndTextInput input)
+        protected override async Task<MultiItemOutput> ExecuteAsync(QueryByNumAndTextInput input)
         {
             var fooService = Context.ServiceProvider.Resolve<IFooService>();
 

@@ -13,7 +13,7 @@ namespace HelloWorld.Lambda
         {
         }
         
-        protected override Output Handle(Input input)
+        protected override Output Execute(Input input)
         {
             var speakService = Context.ServiceProvider.Resolve<ISpeakService>();
             var output =  new Output
