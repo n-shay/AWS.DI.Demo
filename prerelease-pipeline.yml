@@ -5,7 +5,7 @@ resources:
       name: DevOps
 
 stages:
-- template: trg.extensions.yml@devOps_templates
+- template: pipelines/trg.extensions.yml@devOps_templates
   parameters:
     name: 'Publish PreRelease Packages'
     vmImage: 'ubuntu-latest'
