@@ -9,5 +9,4 @@ stages:
   parameters:
     name: 'Publish PreRelease Packages'
     vmImage: 'ubuntu-latest'
-    isPreRelease: 'true'
       
