@@ -1,0 +1,12 @@
+resources:
+  repositories:
+    - repository: devOps_templates
+      type: git
+      name: DevOps
+
+stages:
+- template: trg.extensions.yml@devOps_templates
+  parameters:
+    name: 'Publish Release Packages'
+    vmImage: 'ubuntu-latest'
+      
