@@ -1,74 +1,76 @@
-﻿using System;
-
-namespace TRG.Extensions.Logging.Serilog
+﻿namespace TRG.Extensions.Logging.Serilog
 {
+    using System;
+
+    using TRG.Extensions.Logging;
+
     public class SerilogLogger<T> : ILogger
     {
-        private readonly global::Serilog.ILogger _logger;
+        private readonly global::Serilog.ILogger logger;
 
         public SerilogLogger()
         {
-            _logger = global::Serilog.Log.Logger.ForContext<T>();
+            this.logger = global::Serilog.Log.ForContext<T>();
         }
 
         public void Verbose(Exception exception, string message, params object[] propertyValues)
         {
-            _logger.Verbose(exception, message, propertyValues);
+            this.logger.Verbose(exception, message, propertyValues);
         }
 
         public void Verbose(string message, params object[] propertyValues)
         {
-            _logger.Verbose(message, propertyValues);
+            this.logger.Verbose(message, propertyValues);
         }
 
         public void Debug(Exception exception, string message, params object[] propertyValues)
         {
-            _logger.Debug(exception, message, propertyValues);
+            this.logger.Debug(exception, message, propertyValues);
         }
 
         public void Debug(string message, params object[] propertyValues)
         {
-            _logger.Debug(message, propertyValues);
+            this.logger.Debug(message, propertyValues);
         }
 
         public void Information(Exception exception, string message, params object[] propertyValues)
         {
-            _logger.Information(exception, message, propertyValues);
+            this.logger.Information(exception, message, propertyValues);
         }
 
         public void Information(string message, params object[] propertyValues)
         {
-            _logger.Information(message, propertyValues);
+            this.logger.Information(message, propertyValues);
         }
 
         public void Warning(Exception exception, string message, params object[] propertyValues)
         {
-            _logger.Warning(exception, message, propertyValues);
+            this.logger.Warning(exception, message, propertyValues);
         }
 
         public void Warning(string message, params object[] propertyValues)
         {
-            _logger.Warning(message, propertyValues);
+            this.logger.Warning(message, propertyValues);
         }
 
         public void Error(Exception exception, string message, params object[] propertyValues)
         {
-            _logger.Error(exception, message, propertyValues);
+            this.logger.Error(exception, message, propertyValues);
         }
 
         public void Error(string message, params object[] propertyValues)
         {
-            _logger.Error(message, propertyValues);
+            this.logger.Error(message, propertyValues);
         }
 
         public void Fatal(Exception exception, string message, params object[] propertyValues)
         {
-            _logger.Fatal(exception, message, propertyValues);
+            this.logger.Fatal(exception, message, propertyValues);
         }
 
         public void Fatal(string message, params object[] propertyValues)
         {
-            _logger.Fatal(message, propertyValues);
+            this.logger.Fatal(message, propertyValues);
         }
     }
 }

@@ -1,30 +1,30 @@
-﻿using System;
-using System.Threading;
-
-namespace TRG.Extensions.Threading
+﻿namespace TRG.Extensions.Threading
 {
+    using System;
+    using System.Threading;
+
     public class ReaderWriterLock
     {
-        private readonly ReaderWriterLockSlim _innerLock;
+        private readonly ReaderWriterLockSlim innerLock;
 
         public ReaderWriterLock()
         {
-            _innerLock = new ReaderWriterLockSlim();
+            this.innerLock = new ReaderWriterLockSlim();
         }
 
         public Releaser ReaderLock(bool isUpgradeable = false)
         {
             if (isUpgradeable)
-                _innerLock.EnterUpgradeableReadLock();
+                this.innerLock.EnterUpgradeableReadLock();
             else
-                _innerLock.EnterReadLock();
+                this.innerLock.EnterReadLock();
 
             return Releaser.CreateReadReleaser(this, isUpgradeable);
         }
 
         public Releaser WriterLock()
         {
-            _innerLock.EnterWriteLock();
+            this.innerLock.EnterWriteLock();
 
             return Releaser.CreateWriteReleaser(this);
         }
@@ -32,14 +32,14 @@ namespace TRG.Extensions.Threading
         private void ReaderRelease(bool isUpgradeable)
         {
             if (isUpgradeable)
-                _innerLock.ExitUpgradeableReadLock();
+                this.innerLock.ExitUpgradeableReadLock();
             else
-                _innerLock.ExitReadLock();
+                this.innerLock.ExitReadLock();
         }
 
         private void WriterRelease()
         {
-            _innerLock.ExitWriteLock();
+            this.innerLock.ExitWriteLock();
         }
 
         public struct Releaser : IDisposable
@@ -67,10 +67,10 @@ namespace TRG.Extensions.Threading
 
             public void Dispose()
             {
-                if (toRelease == null) return;
+                if (this.toRelease == null) return;
 
-                if (writer) toRelease.WriterRelease();
-                else toRelease.ReaderRelease(isUpgradeable);
+                if (this.writer) this.toRelease.WriterRelease();
+                else this.toRelease.ReaderRelease(this.isUpgradeable);
             }
         }
     }

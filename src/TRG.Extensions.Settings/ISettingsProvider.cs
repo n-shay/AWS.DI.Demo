@@ -1,11 +1,13 @@
 ﻿namespace TRG.Extensions.Settings
 {
+    using System;
+
+    using TRG.Extensions.Configuration;
+
     public interface ISettingsProvider
     {
-        T GetValue<T>(string key, T defaultValue = default(T));
+        ISettings<T> Get<T>();
 
-        string GetConnectionString(string name);
-
-        T GetAppSettings<T>();
+        void Configure<T>(Func<IConfigurationProvider, T> config);
     }
 }

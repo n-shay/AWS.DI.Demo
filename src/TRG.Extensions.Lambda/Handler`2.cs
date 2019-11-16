@@ -11,10 +11,9 @@ namespace TRG.Extensions.Lambda
         [LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
         public TOutput Handle(TInput input, ILambdaContext context)
         {
-            LambdaLifestyle.Invoked();
-            Context.Lambda = context;
+            this.Context.Lambda = context;
 
-            return Execute(input);
+            return this.Execute(input);
         }
 
         protected abstract TOutput Execute(TInput input);

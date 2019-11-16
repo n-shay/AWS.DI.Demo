@@ -1,8 +1,8 @@
-﻿using TRG.Extensions.DependencyInjection;
-using TRG.Extensions.Settings;
-
-namespace TRG.Extensions.Logging.Serilog.Lambda
+﻿namespace TRG.Extensions.Logging.Serilog.Lambda
 {
+    using TRG.Extensions.Configuration;
+    using TRG.Extensions.DependencyInjection;
+
     public static class DependencyCollectionExtensions
     {
         public static IDependencyCollection UseSerilog(this IDependencyCollection collection, IConfigurationProvider configurationProvider)

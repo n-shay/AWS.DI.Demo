@@ -1,18 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-
 namespace TRG.Extensions.Diagnosis
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+
     public class BlockTelemeter : IDisposable
     {
-        private readonly string _blockName;
-        private readonly Action<string> _writeAction;
-        private readonly bool _writeNewLine;
-        private readonly List<(string Name, long Time)> _collection;
-        private readonly Stopwatch _stopwatch;
+        private readonly string blockName;
+        private readonly Action<string> writeAction;
+        private readonly bool writeNewLine;
+        private readonly List<CheckPoint> collection;
+        private readonly Stopwatch stopwatch;
 
         public BlockTelemeter(string blockName, TextWriter textWriter)
             : this(blockName, textWriter.WriteLine, false)
@@ -22,43 +22,60 @@ namespace TRG.Extensions.Diagnosis
 
         public BlockTelemeter(string blockName, Action<string> writeAction, bool writeNewLine = true)
         {
-            _blockName = blockName;
-            _writeAction = writeAction ?? throw new ArgumentNullException(nameof(writeAction));
-            _writeNewLine = writeNewLine;
-            _collection = new List<(string Name, long Time)>();
-            _stopwatch = Stopwatch.StartNew();
+            this.blockName = blockName;
+            this.writeAction = writeAction ?? throw new ArgumentNullException(nameof(writeAction));
+            this.writeNewLine = writeNewLine;
+            this.collection = new List<CheckPoint>();
+            this.stopwatch = Stopwatch.StartNew();
         }
 
         public void Snap(string checkpointName)
         {
-            RecordTime(checkpointName);
+            this.RecordTime(checkpointName);
 
-            _stopwatch.Restart();
+#if NET35
+            _stopwatch.Reset();
+            _stopwatch.Start();
+#else
+            this.stopwatch.Restart();
+#endif
         }
 
         public void Dispose()
         {
-            RecordTime("[End]");
-            _stopwatch.Stop();
+            this.RecordTime("[End]");
+            this.stopwatch.Stop();
 
-            var average = _collection.Average(i => i.Time);
-            var total = _collection.Sum(i => i.Time);
+            var average = this.collection.Average(i => i.Time);
+            var total = this.collection.Sum(i => i.Time);
 
-            var newLine = _writeNewLine ? Environment.NewLine : null;
-            _writeAction($"[{_blockName}] {_collection.Count} checkpoints in {total:N0}ms (Average: {average:N0}ms).{newLine}");
+            var newLine = this.writeNewLine ? Environment.NewLine : null;
+            this.writeAction($"[{this.blockName}] {this.collection.Count} checkpoints in {total:N0}ms (Average: {average:N0}ms).{newLine}");
 
-            for (var i = 0; i < _collection.Count; i++)
+            for (var i = 0; i < this.collection.Count; i++)
             {
-                var (name, time) = _collection[i];
+                var checkPoint = this.collection[i];
 
-                _writeAction($"[{_blockName}] {name}:{i + 1} - {time:N0}ms{newLine}");
+                this.writeAction($"[{this.blockName}] {checkPoint.Name}:{i + 1} - {checkPoint.Time:N0}ms{newLine}");
             }
         }
 
         private void RecordTime(string name)
         {
-            var time = _stopwatch.ElapsedMilliseconds;
-            _collection.Add((name, time));
+            var time = this.stopwatch.ElapsedMilliseconds;
+            this.collection.Add(new CheckPoint(name, time));
+        }
+
+        private class CheckPoint
+        {
+            public string Name { get; }
+            public long Time { get; }
+
+            public CheckPoint(string name, long time)
+            {
+                this.Name = name;
+                this.Time = time;
+            }
         }
     }
 }

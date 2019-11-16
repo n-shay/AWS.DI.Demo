@@ -12,10 +12,9 @@ namespace TRG.Extensions.Lambda
         [LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
         public Task<TOutput> HandleAsync(TInput input, ILambdaContext context)
         {
-            LambdaLifestyle.Invoked();
-            Context.Lambda = context;
+            this.Context.Lambda = context;
 
-            return ExecuteAsync(input);
+            return this.ExecuteAsync(input);
         }
 
         protected abstract Task<TOutput> ExecuteAsync(TInput input);

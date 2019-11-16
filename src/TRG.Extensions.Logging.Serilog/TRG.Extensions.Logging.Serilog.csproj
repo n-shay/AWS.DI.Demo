@@ -1,17 +1,22 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>The Ranting Geek</Company>
+    <Authors>Shay Nissel</Authors>
+    <Version>1.0.0</Version>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TRG.Extensions.Configuration\TRG.Extensions.Configuration.csproj" />
     <ProjectReference Include="..\TRG.Extensions.DependencyInjection\TRG.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\TRG.Extensions.Logging\TRG.Extensions.Logging.csproj" />
-    <ProjectReference Include="..\TRG.Extensions.Settings\TRG.Extensions.Settings.csproj" />
   </ItemGroup>
 
 </Project>

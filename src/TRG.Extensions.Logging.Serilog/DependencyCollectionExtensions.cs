@@ -1,18 +1,19 @@
-﻿using Serilog;
-using TRG.Extensions.DependencyInjection;
-using TRG.Extensions.Settings;
-
-namespace TRG.Extensions.Logging.Serilog
+﻿namespace TRG.Extensions.Logging.Serilog
 {
+    using global::Serilog;
+
+    using TRG.Extensions.Configuration;
+    using TRG.Extensions.DependencyInjection;
+
     public static class DependencyCollectionExtensions
     {
         public static IDependencyCollection UseSerilog(this IDependencyCollection collection, IConfigurationProvider configurationProvider)
         {
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configurationProvider.Get())
+                .ReadFrom.Configuration(configurationProvider.GetRoot())
                 .CreateLogger();
 
-            collection.Add(new SerilogDependencyDescriptor());
+            collection.Add<SerilogDependencyDescriptor>();
             return collection;
         }
     }

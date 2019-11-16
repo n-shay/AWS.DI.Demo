@@ -1,11 +1,21 @@
-﻿using System;
-
-namespace TRG.Extensions.DependencyInjection
+﻿namespace TRG.Extensions.DependencyInjection
 {
-    public class DependencyResolutionException : Exception
+    using System;
+
+    public class DependencyResolutionException : ApplicationException
     {
         public DependencyResolutionException(Type type)
-            : base($"The type {type.Name} could not be resolved.")
+            : this(type, null)
+        {
+        }
+
+        public DependencyResolutionException(Type type, Exception innerException)
+            : this($"The type {type.Name} could not be resolved.", innerException)
+        {
+        }
+
+        public DependencyResolutionException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

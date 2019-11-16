@@ -1,8 +1,8 @@
-﻿using SimpleInjector.Packaging;
-
-namespace TRG.Extensions.DependencyInjection
+﻿namespace TRG.Extensions.DependencyInjection
 {
-    internal class DependencyDescriptor<T> : DependencyDescriptor where T: IPackage, new()
+    using Autofac;
+
+    internal class DependencyDescriptor<T> : DependencyDescriptor where T: Module, new()
     {
         protected override void Register(RegistrationBuilder builder)
         {

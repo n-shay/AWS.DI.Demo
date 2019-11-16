@@ -1,17 +1,19 @@
 ﻿namespace TRG.Extensions.DependencyInjection
 {
+    using Autofac;
+
     internal class SelfDependencyDescriptor : DependencyDescriptor
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider serviceProvider;
 
         public SelfDependencyDescriptor(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider;
         }
 
         protected override void Register(RegistrationBuilder builder)
         {
-            builder.Include(c => c.RegisterSingleton(() => _serviceProvider));
+            builder.Include(c => c.RegisterInstance(this.serviceProvider).As<IServiceProvider>());
         }
     }
 }

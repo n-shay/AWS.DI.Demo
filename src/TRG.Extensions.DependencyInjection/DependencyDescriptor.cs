@@ -1,63 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using SimpleInjector;
-using SimpleInjector.Packaging;
-
-namespace TRG.Extensions.DependencyInjection
+﻿namespace TRG.Extensions.DependencyInjection
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Autofac;
+
     public abstract class DependencyDescriptor
     {
-        private readonly ICollection<Action<Container>> _registerActions = new List<Action<Container>>();
+        private readonly ICollection<Action<ContainerBuilder>> registerActions = new List<Action<ContainerBuilder>>();
 
         /// <summary>
         /// The order in which the dependency descriptor will be loaded; lower number means higher priority.
-        /// <para>Default is 0.</para>
+        /// <para>Default is 9999.</para>
         /// </summary>
-        public virtual int Priority { get; } = 0;
-
-        /// <summary>
-        /// Provides a method to define the container options and configurations. DO NOT include any registrations in this method.
-        /// </summary>
-        /// <param name="builder"></param>
-        protected virtual void Configure(ConfigurationBuilder builder)
-        {
-        }
-
+        public virtual int Priority { get; } = 9999;
+        
         /// <summary>
         /// Provides a method to define the container registrations
         /// </summary>
         /// <param name="builder"></param>
         protected abstract void Register(RegistrationBuilder builder);
-
-        internal void Configure(Container container)
+        
+        internal void Register(ContainerBuilder builder)
         {
-            var builder = new ConfigurationBuilder();
-            Configure(builder);
+            var b = new RegistrationBuilder();
+            this.Register(b);
 
-            builder.Apply(container);
-        }
-
-        internal void Register(Container container)
-        {
-            var builder = new RegistrationBuilder();
-            Register(builder);
-
-            builder.Apply(container);
+            b.Apply(builder);
         }
 
         public class ConfigurationBuilder
         {
-            private readonly ICollection<Action<Container>> _actions = new List<Action<Container>>();
+            private readonly ICollection<Action<ContainerBuilder>> actions = new List<Action<ContainerBuilder>>();
 
             // TODO: abstract SimpleInjector dependencies
-            public void Include(Action<Container> registerAction)
+            public void Include(Action<ContainerBuilder> registerAction)
             {
-                _actions.Add(registerAction);
+                this.actions.Add(registerAction);
             }
 
-            internal void Apply(Container container)
+            internal void Apply(ContainerBuilder container)
             {
-                foreach (var action in _actions)
+                foreach (var action in this.actions)
                 {
                     action(container);
                 }
@@ -66,14 +50,14 @@ namespace TRG.Extensions.DependencyInjection
 
         public class RegistrationBuilder : ConfigurationBuilder
         {
-            public void Use<T>() where T : IPackage, new()
+            public void Use<T>() where T : Module, new()
             {
-                Use(Activator.CreateInstance<T>());
+                this.Include(b => b.RegisterModule<T>());
             }
 
-            public void Use(IPackage package)
+            public void Use(Module module)
             {
-                Include(package.RegisterServices);
+                this.Include(b => b.RegisterModule(module));
             }
         }
     }

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>ReverseVision Inc.</Company>
+    <Authors>Shay Nissel</Authors>
+    <Version>1.0.1$(VersionSuffix)</Version>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <!-- .NET Framework references, compilation flags and build options -->
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <DefineConstants>NET461;NETFULL</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RV.Application.Core\RV.Application.Core.csproj" />
+    <ProjectReference Include="..\RV.Application.DependencyInjection\RV.Application.DependencyInjection.csproj" />
+  </ItemGroup>
+
+</Project>

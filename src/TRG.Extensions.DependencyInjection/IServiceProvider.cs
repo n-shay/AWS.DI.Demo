@@ -1,11 +1,11 @@
-﻿using System;
-
-namespace TRG.Extensions.DependencyInjection
+﻿namespace TRG.Extensions.DependencyInjection
 {
+    using System;
+
     public interface IServiceProvider
     {
-        T Resolve<T>();
+        T Resolve<T>(params object[] arguments);
 
-        object Resolve(Type serviceType);
+        object Resolve(Type serviceType, params object[] arguments);
     }
 }

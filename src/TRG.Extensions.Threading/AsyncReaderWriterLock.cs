@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace TRG.Extensions.Threading
+﻿namespace TRG.Extensions.Threading
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// A reader/writer lock that is compatible with async.
     /// </summary>
@@ -13,29 +13,29 @@ namespace TRG.Extensions.Threading
         /// <summary>
         /// The queue of TCSs that other tasks are awaiting to acquire the lock as writers.
         /// </summary>
-        private readonly Queue<TaskCompletionSource<IDisposable>> _writerQueue;
+        private readonly Queue<TaskCompletionSource<IDisposable>> writerQueue;
         
         /// <summary>
         /// The queue of TCSs that other tasks are awaiting to acquire the lock as readers.
         /// </summary>
-        private readonly Queue<TaskCompletionSource<IDisposable>> _readerQueue;
+        private readonly Queue<TaskCompletionSource<IDisposable>> readerQueue;
 
         /// <summary>
         /// The object used for mutual exclusion.
         /// </summary>
-        private readonly object _mutex;
+        private readonly object mutex;
 
         /// <summary>
         /// Number of reader locks held; -1 if a writer lock is held; 0 if no locks are held.
         /// </summary>
-        private int _locksHeld;
+        private int locksHeld;
 
         // Creates a new async-compatible reader/writer lock.
         public AsyncReaderWriterLock()
         {
-            _writerQueue = new Queue<TaskCompletionSource<IDisposable>>();
-            _readerQueue = new Queue<TaskCompletionSource<IDisposable>>();
-            _mutex = new object();
+            this.writerQueue = new Queue<TaskCompletionSource<IDisposable>>();
+            this.readerQueue = new Queue<TaskCompletionSource<IDisposable>>();
+            this.mutex = new object();
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace TRG.Extensions.Threading
         {
             task.ContinueWith(t =>
             {
-                lock (_mutex) { ReleaseWaiters(); }
+                lock (this.mutex) { this.ReleaseWaiters(); }
             }, CancellationToken.None, TaskContinuationOptions.OnlyOnCanceled | TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
         }
 
@@ -55,24 +55,24 @@ namespace TRG.Extensions.Threading
         public Task<IDisposable> WriterLockAsync()
         {
             Task<IDisposable> result;
-            lock (_mutex)
+            lock (this.mutex)
             {
                 // If the lock is available, take it immediately.
-                if (_locksHeld == 0)
+                if (this.locksHeld == 0)
                 {
-                    _locksHeld = -1;
+                    this.locksHeld = -1;
                     result = Task.FromResult<IDisposable>(new WriterKey(this));
                 }
                 else
                 {
                     // Wait for the lock to become available
                     var tcs = new TaskCompletionSource<IDisposable>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    _writerQueue.Enqueue(tcs);
+                    this.writerQueue.Enqueue(tcs);
                     result = tcs.Task;
                 }
             }
 
-            ReleaseWaitersWhenCanceled(result);
+            this.ReleaseWaitersWhenCanceled(result);
             return result;
         }
 
@@ -80,19 +80,19 @@ namespace TRG.Extensions.Threading
         // Returns a disposable that releases the lock when disposed.
         public Task<IDisposable> ReaderLockAsync()
         {
-            lock (_mutex)
+            lock (this.mutex)
             {
                 // If the lock is available or in read mode and there are no waiting writers, upgradeable readers, or upgrading readers, take it immediately.
-                if (_locksHeld >= 0 && _writerQueue.Count == 0)
+                if (this.locksHeld >= 0 && this.writerQueue.Count == 0)
                 {
-                    ++_locksHeld;
+                    ++this.locksHeld;
                     return Task.FromResult<IDisposable>(new ReaderKey(this));
                 }
                 else
                 {
                     // Wait for the lock to become available
                     var tcs = new TaskCompletionSource<IDisposable>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    _readerQueue.Enqueue(tcs);
+                    this.readerQueue.Enqueue(tcs);
                     return tcs.Task;
                 }
             }
@@ -103,10 +103,10 @@ namespace TRG.Extensions.Threading
         /// </summary>
         private void ReleaseReaderLock()
         {
-            lock (_mutex)
+            lock (this.mutex)
             {
-                --_locksHeld;
-                ReleaseWaiters();
+                --this.locksHeld;
+                this.ReleaseWaiters();
             }
         }
 
@@ -115,10 +115,10 @@ namespace TRG.Extensions.Threading
         /// </summary>
         private void ReleaseWriterLock()
         {
-            lock (_mutex)
+            lock (this.mutex)
             {
-                _locksHeld = 0;
-                ReleaseWaiters();
+                this.locksHeld = 0;
+                this.ReleaseWaiters();
             }
         }
 
@@ -127,24 +127,24 @@ namespace TRG.Extensions.Threading
         /// </summary>
         private void ReleaseWaiters()
         {
-            if (_locksHeld != 0)
+            if (this.locksHeld != 0)
                 return;
 
             // Give priority to writers.
-            if (_writerQueue.Count > 0)
+            if (this.writerQueue.Count > 0)
             {
-                _locksHeld = -1;
-                var tcs = _writerQueue.Dequeue();
+                this.locksHeld = -1;
+                var tcs = this.writerQueue.Dequeue();
                 tcs.TrySetResult(new WriterKey(this));
                 return;
             }
 
             // Then to readers.
-            while (_readerQueue.Count > 0)
+            while (this.readerQueue.Count > 0)
             {
-                var tcs = _readerQueue.Dequeue();
+                var tcs = this.readerQueue.Dequeue();
                 tcs.TrySetResult(new ReaderKey(this));
-                ++_locksHeld;
+                ++this.locksHeld;
             }
         }
 
@@ -157,15 +157,15 @@ namespace TRG.Extensions.Threading
 
             public ReaderKey(AsyncReaderWriterLock @lock)
             {
-                _lock = @lock;
+                this._lock = @lock;
             }
 
             // Release the lock.
             public void Dispose()
             {
-                if(_lock != null)
+                if(this._lock != null)
                 {
-                    _lock.ReleaseReaderLock();
+                    this._lock.ReleaseReaderLock();
                 }
             }
         }
@@ -179,15 +179,15 @@ namespace TRG.Extensions.Threading
 
             public WriterKey(AsyncReaderWriterLock @lock)
             {
-                _lock = @lock;
+                this._lock = @lock;
             }
 
             // Release the lock.
             public void Dispose()
             {
-                if(_lock != null)
+                if(this._lock != null)
                 {
-                    _lock.ReleaseWriterLock();
+                    this._lock.ReleaseWriterLock();
                 }
             }
         }
