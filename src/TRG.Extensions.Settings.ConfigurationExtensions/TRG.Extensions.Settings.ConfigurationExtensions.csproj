@@ -8,10 +8,6 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <!-- .NET Framework references, compilation flags and build options -->
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <DefineConstants>NET461;NETFULL</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\TRG.Extensions.DependencyInjection\TRG.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\TRG.Extensions.Settings\TRG.Extensions.Settings.csproj" />
