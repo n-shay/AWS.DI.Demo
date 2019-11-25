@@ -10,4 +10,5 @@ jobs:
     name: 'Publish Release Packages'
     vmImage: 'ubuntu-latest'
     isRelease: 'true'
+    nugetConfigPath: './src/.nuget/NuGet.config'
       

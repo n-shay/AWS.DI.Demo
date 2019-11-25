@@ -10,4 +10,5 @@ jobs:
     name: 'Validate Pull Request'
     vmImage: 'ubuntu-latest'
     validateOnly: 'true'
+    nugetConfigPath: './src/.nuget/NuGet.config'
       
