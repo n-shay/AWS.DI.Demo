@@ -4,7 +4,7 @@ resources:
       type: git
       name: DevOps
 
-stages:
+jobs:
 - template: pipelines/trg.extensions.yml@devOps_templates
   parameters:
     name: 'Validate Pull Request'
