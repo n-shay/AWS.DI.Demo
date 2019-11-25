@@ -1,24 +1,21 @@
-﻿using Amazon.DynamoDBv2;
-using SimpleInjector;
-
-namespace TRG.Extensions.DataAccess.DynamoDB
+﻿namespace TRG.Extensions.DataAccess.DynamoDB
 {
-    public class DependencyDescriptor : DependencyInjection.DependencyDescriptor
+    using Autofac;
+
+    public class DependencyDescriptor : TRG.Extensions.DependencyInjection.DependencyDescriptor
     {
+        public const string UNIT_OF_WORK_NAMED_SCOPE = "UnitOfWork";
+
         protected override void Register(RegistrationBuilder builder)
         {
             builder.Include(container =>
             {
-                container.RegisterSingleton<IAmazonDynamoDB>(() => new AmazonDynamoDBClient());
-                container.Register<IDbContext, Context>(GetContextLifestyle());
-                container.Register<IUnitOfWorkFactory, UnitOfWorkFactory>();
+                container.RegisterGeneric(typeof(ContextProvider<>))
+                    .Named(UNIT_OF_WORK_NAMED_SCOPE, typeof(IContextProvider<>));
+
+                container.RegisterType<UnitOfWorkFactory>()
+                    .As<IUnitOfWorkFactory>();
             });
         }
-
-        protected virtual Lifestyle GetContextLifestyle()
-        {
-            return Lifestyle.Transient;
-        }
-
     }
 }

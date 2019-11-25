@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
     public interface IUnitOfWorkFactory
     {

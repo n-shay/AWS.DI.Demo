@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
-using TRG.Extensions.DataAccess.Specification;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using System.Threading.Tasks;
+
+    using TRG.Extensions.DataAccess.Specification;
+
     /// <summary>
     /// Interface for a read only keyed ID data store.
     /// </summary>

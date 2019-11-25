@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using System;
+    using System.Threading.Tasks;
+
     public interface IUnitOfWork : IDisposable
     {
         // TODO: Implement transaction support.

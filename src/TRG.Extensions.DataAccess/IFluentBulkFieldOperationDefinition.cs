@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+
     public interface IFluentBulkFieldOperationDefinition<TEntity>
         where TEntity : class, IEntity
     {

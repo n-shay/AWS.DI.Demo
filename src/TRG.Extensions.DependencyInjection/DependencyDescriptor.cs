@@ -7,8 +7,6 @@
 
     public abstract class DependencyDescriptor
     {
-        private readonly ICollection<Action<ContainerBuilder>> registerActions = new List<Action<ContainerBuilder>>();
-
         /// <summary>
         /// The order in which the dependency descriptor will be loaded; lower number means higher priority.
         /// <para>Default is 9999.</para>
@@ -33,7 +31,7 @@
         {
             private readonly ICollection<Action<ContainerBuilder>> actions = new List<Action<ContainerBuilder>>();
 
-            // TODO: abstract SimpleInjector dependencies
+            // TODO: abstract Autofac dependencies
             public void Include(Action<ContainerBuilder> registerAction)
             {
                 this.actions.Add(registerAction);

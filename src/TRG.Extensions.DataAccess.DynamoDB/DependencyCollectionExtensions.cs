@@ -1,7 +1,7 @@
-﻿using TRG.Extensions.DependencyInjection;
-
-namespace TRG.Extensions.DataAccess.DynamoDB
+﻿namespace TRG.Extensions.DataAccess.DynamoDB
 {
+    using TRG.Extensions.DependencyInjection;
+
     public static class DependencyCollectionExtensions
     {
         // ReSharper disable once InconsistentNaming

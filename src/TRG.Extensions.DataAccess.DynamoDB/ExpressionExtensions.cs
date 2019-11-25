@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
-
-namespace TRG.Extensions.DataAccess.DynamoDB
+﻿namespace TRG.Extensions.DataAccess.DynamoDB
 {
+    using System;
+    using System.Linq.Expressions;
+    using System.Reflection;
+
     public static class ExpressionExtensions
     {
         public static PropertyInfo GetPropertyInfo<T, TValue>(this Expression<Func<T, TValue>> expression)

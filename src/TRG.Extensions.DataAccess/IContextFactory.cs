@@ -1,7 +1,7 @@
 ﻿namespace TRG.Extensions.DataAccess
 {
-    public interface IContextFactory
+    public interface IContextFactory<out T> where T: IContext
     {
-        IContext Create();
+        T Create();
     }
 }

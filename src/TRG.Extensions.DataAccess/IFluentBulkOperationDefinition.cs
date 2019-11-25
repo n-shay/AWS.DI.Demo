@@ -1,8 +1,8 @@
-using System;
-using System.Linq.Expressions;
-
 namespace TRG.Extensions.DataAccess
 {
+    using System;
+    using System.Linq.Expressions;
+
     public interface IFluentBulkOperationDefinition<TEntity> where TEntity : class, IEntity
     {
         /// <summary>

@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace TRG.Extensions.DataAccess.DynamoDB
+﻿namespace TRG.Extensions.DataAccess.DynamoDB
 {
-    public class DynamoDbException : Exception
+    using System;
+
+    public class DynamoDbException : ApplicationException
     {
         public DynamoDbException(string message)
             : base(message)

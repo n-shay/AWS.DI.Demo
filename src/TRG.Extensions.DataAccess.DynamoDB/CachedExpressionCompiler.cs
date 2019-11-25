@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-
-namespace TRG.Extensions.DataAccess.DynamoDB
+﻿namespace TRG.Extensions.DataAccess.DynamoDB
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+    using System.Reflection;
+
     // BinaryExpression fingerprint class
     // Useful for things like array[index]
     internal sealed class BinaryExpressionFingerprint : ExpressionFingerprint
@@ -17,7 +17,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             // Other properties on BinaryExpression (like IsLifted / IsLiftedToNull) are simply derived
             // from Type and NodeType, so they're not necessary for inclusion in the fingerprint.
 
-            Method = method;
+            this.Method = method;
         }
 
         // http://msdn.microsoft.com/en-us/library/system.linq.expressions.binaryexpression.method.aspx
@@ -38,7 +38,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         internal override void AddToHashCodeCombiner(HashCodeCombiner combiner)
         {
-            combiner.AddObject(Method);
+            combiner.AddObject(this.Method);
             base.AddToHashCodeCombiner(combiner);
         }
     }
@@ -57,15 +57,15 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         private static class Compiler<TIn, TOut>
         {
-            private static Func<TIn, TOut> _identityFunc;
+            private static Func<TIn, TOut> identityFunc;
 
-            private static readonly ConcurrentDictionary<MemberInfo, Func<TIn, TOut>> _simpleMemberAccessDict =
+            private static readonly ConcurrentDictionary<MemberInfo, Func<TIn, TOut>> simpleMemberAccessDict =
                 new ConcurrentDictionary<MemberInfo, Func<TIn, TOut>>();
 
-            private static readonly ConcurrentDictionary<MemberInfo, Func<object, TOut>> _constMemberAccessDict =
+            private static readonly ConcurrentDictionary<MemberInfo, Func<object, TOut>> constMemberAccessDict =
                 new ConcurrentDictionary<MemberInfo, Func<object, TOut>>();
 
-            private static readonly ConcurrentDictionary<ExpressionFingerprintChain, Hoisted<TIn, TOut>> _fingerprintedCache =
+            private static readonly ConcurrentDictionary<ExpressionFingerprintChain, Hoisted<TIn, TOut>> fingerprintedCache =
                 new ConcurrentDictionary<ExpressionFingerprintChain, Hoisted<TIn, TOut>>();
 
             public static Func<TIn, TOut> Compile(Expression<Func<TIn, TOut>> expr)
@@ -98,12 +98,12 @@ namespace TRG.Extensions.DataAccess.DynamoDB
                     // model => model
 
                     // don't need to lock, as all identity funcs are identical
-                    if (_identityFunc == null)
+                    if (identityFunc == null)
                     {
-                        _identityFunc = expr.Compile();
+                        identityFunc = expr.Compile();
                     }
 
-                    return _identityFunc;
+                    return identityFunc;
                 }
 
                 return null;
@@ -116,7 +116,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
                 if (fingerprint != null)
                 {
-                    var del = _fingerprintedCache.GetOrAdd(fingerprint, _ =>
+                    var del = fingerprintedCache.GetOrAdd(fingerprint, _ =>
                     {
                         // Fingerprinting succeeded, but there was a cache miss. Rewrite the expression
                         // and add the rewritten expression to the cache.
@@ -145,14 +145,14 @@ namespace TRG.Extensions.DataAccess.DynamoDB
                     if (memberExpr.Expression == expr.Parameters[0] || memberExpr.Expression == null)
                     {
                         // model => model.Member or model => StaticMember
-                        return _simpleMemberAccessDict.GetOrAdd(memberExpr.Member, _ => expr.Compile());
+                        return simpleMemberAccessDict.GetOrAdd(memberExpr.Member, _ => expr.Compile());
                     }
 
                     ConstantExpression constExpr = memberExpr.Expression as ConstantExpression;
                     if (constExpr != null)
                     {
                         // model => {const}.Member (captured local variable)
-                        var del = _constMemberAccessDict.GetOrAdd(memberExpr.Member, _ =>
+                        var del = constMemberAccessDict.GetOrAdd(memberExpr.Member, _ =>
                         {
                             // rewrite as capturedLocal => ((TDeclaringType)capturedLocal).Member
                             var constParamExpr = Expression.Parameter(typeof(object), "capturedLocal");
@@ -248,8 +248,8 @@ namespace TRG.Extensions.DataAccess.DynamoDB
     {
         protected ExpressionFingerprint(ExpressionType nodeType, Type type)
         {
-            NodeType = nodeType;
-            Type = type;
+            this.NodeType = nodeType;
+            this.Type = type;
         }
 
         // the type of expression node, e.g. OP_ADD, MEMBER_ACCESS, etc.
@@ -260,8 +260,8 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         internal virtual void AddToHashCodeCombiner(HashCodeCombiner combiner)
         {
-            combiner.AddInt32((int)NodeType);
-            combiner.AddObject(Type);
+            combiner.AddInt32((int)this.NodeType);
+            combiner.AddObject(this.Type);
         }
 
         protected bool Equals(ExpressionFingerprint other)
@@ -273,13 +273,13 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as ExpressionFingerprint);
+            return this.Equals(obj as ExpressionFingerprint);
         }
 
         public override int GetHashCode()
         {
             HashCodeCombiner combiner = new HashCodeCombiner();
-            AddToHashCodeCombiner(combiner);
+            this.AddToHashCodeCombiner(combiner);
             return combiner.CombinedHash;
         }
     }
@@ -316,13 +316,13 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as ExpressionFingerprintChain);
+            return this.Equals(obj as ExpressionFingerprintChain);
         }
 
         public override int GetHashCode()
         {
             HashCodeCombiner combiner = new HashCodeCombiner();
-            Elements.ForEach(combiner.AddFingerprint);
+            this.Elements.ForEach(combiner.AddFingerprint);
 
             return combiner.CombinedHash;
         }
@@ -330,10 +330,10 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
     internal sealed class FingerprintingExpressionVisitor : ExpressionVisitor
     {
-        private readonly List<object> _seenConstants = new List<object>();
-        private readonly List<ParameterExpression> _seenParameters = new List<ParameterExpression>();
-        private readonly ExpressionFingerprintChain _currentChain = new ExpressionFingerprintChain();
-        private bool _gaveUp;
+        private readonly List<object> seenConstants = new List<object>();
+        private readonly List<ParameterExpression> seenParameters = new List<ParameterExpression>();
+        private readonly ExpressionFingerprintChain currentChain = new ExpressionFingerprintChain();
+        private bool gaveUp;
 
         private FingerprintingExpressionVisitor()
         {
@@ -343,7 +343,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
         {
             // We don't understand this node, so just quit.
 
-            _gaveUp = true;
+            this.gaveUp = true;
             return node;
         }
 
@@ -354,15 +354,15 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             FingerprintingExpressionVisitor visitor = new FingerprintingExpressionVisitor();
             visitor.Visit(expr);
 
-            if (visitor._gaveUp)
+            if (visitor.gaveUp)
             {
                 capturedConstants = null;
                 return null;
             }
             else
             {
-                capturedConstants = visitor._seenConstants;
-                return visitor._currentChain;
+                capturedConstants = visitor.seenConstants;
+                return visitor.currentChain;
             }
         }
 
@@ -370,7 +370,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
         {
             if (node == null)
             {
-                _currentChain.Elements.Add(null);
+                this.currentChain.Elements.Add(null);
                 return null;
             }
             else
@@ -381,248 +381,248 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new BinaryExpressionFingerprint(node.NodeType, node.Type, node.Method));
+            this.currentChain.Elements.Add(new BinaryExpressionFingerprint(node.NodeType, node.Type, node.Method));
             return base.VisitBinary(node);
         }
 
         protected override Expression VisitBlock(BlockExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override CatchBlock VisitCatchBlock(CatchBlock node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitConditional(ConditionalExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new ConditionalExpressionFingerprint(node.NodeType, node.Type));
+            this.currentChain.Elements.Add(new ConditionalExpressionFingerprint(node.NodeType, node.Type));
             return base.VisitConditional(node);
         }
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
 
-            _seenConstants.Add(node.Value);
-            _currentChain.Elements.Add(new ConstantExpressionFingerprint(node.NodeType, node.Type));
+            this.seenConstants.Add(node.Value);
+            this.currentChain.Elements.Add(new ConstantExpressionFingerprint(node.NodeType, node.Type));
             return base.VisitConstant(node);
         }
 
         protected override Expression VisitDebugInfo(DebugInfoExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitDefault(DefaultExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new DefaultExpressionFingerprint(node.NodeType, node.Type));
+            this.currentChain.Elements.Add(new DefaultExpressionFingerprint(node.NodeType, node.Type));
             return base.VisitDefault(node);
         }
 
         protected override Expression VisitDynamic(DynamicExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override ElementInit VisitElementInit(ElementInit node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitExtension(Expression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitGoto(GotoExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitIndex(IndexExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new IndexExpressionFingerprint(node.NodeType, node.Type, node.Indexer));
+            this.currentChain.Elements.Add(new IndexExpressionFingerprint(node.NodeType, node.Type, node.Indexer));
             return base.VisitIndex(node);
         }
 
         protected override Expression VisitInvocation(InvocationExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitLabel(LabelExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override LabelTarget VisitLabelTarget(LabelTarget node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitLambda<T>(Expression<T> node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new LambdaExpressionFingerprint(node.NodeType, node.Type));
+            this.currentChain.Elements.Add(new LambdaExpressionFingerprint(node.NodeType, node.Type));
             return base.VisitLambda(node);
         }
 
         protected override Expression VisitListInit(ListInitExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitLoop(LoopExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new MemberExpressionFingerprint(node.NodeType, node.Type, node.Member));
+            this.currentChain.Elements.Add(new MemberExpressionFingerprint(node.NodeType, node.Type, node.Member));
             return base.VisitMember(node);
         }
 
         protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override MemberBinding VisitMemberBinding(MemberBinding node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitMemberInit(MemberInitExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new MethodCallExpressionFingerprint(node.NodeType, node.Type, node.Method));
+            this.currentChain.Elements.Add(new MethodCallExpressionFingerprint(node.NodeType, node.Type, node.Method));
             return base.VisitMethodCall(node);
         }
 
         protected override Expression VisitNew(NewExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitNewArray(NewArrayExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
 
-            int parameterIndex = _seenParameters.IndexOf(node);
+            int parameterIndex = this.seenParameters.IndexOf(node);
             if (parameterIndex < 0)
             {
                 // first time seeing this parameter
-                parameterIndex = _seenParameters.Count;
-                _seenParameters.Add(node);
+                parameterIndex = this.seenParameters.Count;
+                this.seenParameters.Add(node);
             }
 
-            _currentChain.Elements.Add(new ParameterExpressionFingerprint(node.NodeType, node.Type, parameterIndex));
+            this.currentChain.Elements.Add(new ParameterExpressionFingerprint(node.NodeType, node.Type, parameterIndex));
             return base.VisitParameter(node);
         }
 
         protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitSwitch(SwitchExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override SwitchCase VisitSwitchCase(SwitchCase node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitTry(TryExpression node)
         {
-            return GiveUp(node);
+            return this.GiveUp(node);
         }
 
         protected override Expression VisitTypeBinary(TypeBinaryExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new TypeBinaryExpressionFingerprint(node.NodeType, node.Type, node.TypeOperand));
+            this.currentChain.Elements.Add(new TypeBinaryExpressionFingerprint(node.NodeType, node.Type, node.TypeOperand));
             return base.VisitTypeBinary(node);
         }
 
         protected override Expression VisitUnary(UnaryExpression node)
         {
-            if (_gaveUp)
+            if (this.gaveUp)
             {
                 return node;
             }
-            _currentChain.Elements.Add(new UnaryExpressionFingerprint(node.NodeType, node.Type, node.Method));
+            this.currentChain.Elements.Add(new UnaryExpressionFingerprint(node.NodeType, node.Type, node.Method));
             return base.VisitUnary(node);
         }
     }
 
     internal class HashCodeCombiner
     {
-        private long _combinedHash64 = 0x1505L;
+        private long combinedHash64 = 0x1505L;
 
         public int CombinedHash
         {
-            get { return _combinedHash64.GetHashCode(); }
+            get { return this.combinedHash64.GetHashCode(); }
         }
 
         public void AddFingerprint(ExpressionFingerprint fingerprint)
@@ -633,7 +633,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             }
             else
             {
-                AddInt32(0);
+                this.AddInt32(0);
             }
         }
 
@@ -641,29 +641,29 @@ namespace TRG.Extensions.DataAccess.DynamoDB
         {
             if (e == null)
             {
-                AddInt32(0);
+                this.AddInt32(0);
             }
             else
             {
                 int count = 0;
                 foreach (object o in e)
                 {
-                    AddObject(o);
+                    this.AddObject(o);
                     count++;
                 }
-                AddInt32(count);
+                this.AddInt32(count);
             }
         }
 
         public void AddInt32(int i)
         {
-            _combinedHash64 = ((_combinedHash64 << 5) + _combinedHash64) ^ i;
+            this.combinedHash64 = ((this.combinedHash64 << 5) + this.combinedHash64) ^ i;
         }
 
         public void AddObject(object o)
         {
             int hashCode = (o != null) ? o.GetHashCode() : 0;
-            AddInt32(hashCode);
+            this.AddInt32(hashCode);
         }
     }
 
@@ -671,8 +671,8 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
     internal sealed class HoistingExpressionVisitor<TIn, TOut> : ExpressionVisitor
     {
-        private static readonly ParameterExpression _hoistedConstantsParamExpr = Expression.Parameter(typeof(List<object>), "hoistedConstants");
-        private int _numConstantsProcessed;
+        private static readonly ParameterExpression hoistedConstantsParamExpr = Expression.Parameter(typeof(List<object>), "hoistedConstants");
+        private int numConstantsProcessed;
 
         // factory will create instance
         private HoistingExpressionVisitor()
@@ -685,14 +685,14 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
             var visitor = new HoistingExpressionVisitor<TIn, TOut>();
             var rewrittenBodyExpr = visitor.Visit(expr.Body);
-            var rewrittenLambdaExpr = Expression.Lambda<Hoisted<TIn, TOut>>(rewrittenBodyExpr, expr.Parameters[0], _hoistedConstantsParamExpr);
+            var rewrittenLambdaExpr = Expression.Lambda<Hoisted<TIn, TOut>>(rewrittenBodyExpr, expr.Parameters[0], hoistedConstantsParamExpr);
             return rewrittenLambdaExpr;
         }
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
             // rewrite the constant expression as (TConst)hoistedConstants[i];
-            return Expression.Convert(Expression.Property(_hoistedConstantsParamExpr, "Item", Expression.Constant(_numConstantsProcessed++)), node.Type);
+            return Expression.Convert(Expression.Property(hoistedConstantsParamExpr, "Item", Expression.Constant(this.numConstantsProcessed++)), node.Type);
         }
     }
 
@@ -704,7 +704,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             // Other properties on IndexExpression (like the argument count) are simply derived
             // from Type and Indexer, so they're not necessary for inclusion in the fingerprint.
 
-            Indexer = indexer;
+            this.Indexer = indexer;
         }
 
         // http://msdn.microsoft.com/en-us/library/system.linq.expressions.indexexpression.indexer.aspx
@@ -725,7 +725,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         internal override void AddToHashCodeCombiner(HashCodeCombiner combiner)
         {
-            combiner.AddObject(Indexer);
+            combiner.AddObject(this.Indexer);
             base.AddToHashCodeCombiner(combiner);
         }
     }
@@ -757,7 +757,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
         public MemberExpressionFingerprint(ExpressionType nodeType, Type type, MemberInfo member)
             : base(nodeType, type)
         {
-            Member = member;
+            this.Member = member;
         }
 
         // http://msdn.microsoft.com/en-us/library/system.linq.expressions.memberexpression.member.aspx
@@ -778,7 +778,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         internal override void AddToHashCodeCombiner(HashCodeCombiner combiner)
         {
-            combiner.AddObject(Member);
+            combiner.AddObject(this.Member);
             base.AddToHashCodeCombiner(combiner);
         }
     }
@@ -791,7 +791,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             // Other properties on MethodCallExpression (like the argument count) are simply derived
             // from Type and Indexer, so they're not necessary for inclusion in the fingerprint.
 
-            Method = method;
+            this.Method = method;
         }
 
         // http://msdn.microsoft.com/en-us/library/system.linq.expressions.methodcallexpression.method.aspx
@@ -812,7 +812,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         internal override void AddToHashCodeCombiner(HashCodeCombiner combiner)
         {
-            combiner.AddObject(Method);
+            combiner.AddObject(this.Method);
             base.AddToHashCodeCombiner(combiner);
         }
     }
@@ -822,7 +822,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
         public ParameterExpressionFingerprint(ExpressionType nodeType, Type type, int parameterIndex)
             : base(nodeType, type)
         {
-            ParameterIndex = parameterIndex;
+            this.ParameterIndex = parameterIndex;
         }
 
         // Parameter position within the overall expression, used to maintain alpha equivalence.
@@ -843,7 +843,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         internal override void AddToHashCodeCombiner(HashCodeCombiner combiner)
         {
-            combiner.AddInt32(ParameterIndex);
+            combiner.AddInt32(this.ParameterIndex);
             base.AddToHashCodeCombiner(combiner);
         }
     }
@@ -853,7 +853,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
         public TypeBinaryExpressionFingerprint(ExpressionType nodeType, Type type, Type typeOperand)
             : base(nodeType, type)
         {
-            TypeOperand = typeOperand;
+            this.TypeOperand = typeOperand;
         }
 
         // http://msdn.microsoft.com/en-us/library/system.linq.expressions.typebinaryexpression.typeoperand.aspx
@@ -874,7 +874,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         internal override void AddToHashCodeCombiner(HashCodeCombiner combiner)
         {
-            combiner.AddObject(TypeOperand);
+            combiner.AddObject(this.TypeOperand);
             base.AddToHashCodeCombiner(combiner);
         }
     }
@@ -887,7 +887,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             // Other properties on UnaryExpression (like IsLifted / IsLiftedToNull) are simply derived
             // from Type and NodeType, so they're not necessary for inclusion in the fingerprint.
 
-            Method = method;
+            this.Method = method;
         }
 
         // http://msdn.microsoft.com/en-us/library/system.linq.expressions.unaryexpression.method.aspx
@@ -908,7 +908,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
 
         internal override void AddToHashCodeCombiner(HashCodeCombiner combiner)
         {
-            combiner.AddObject(Method);
+            combiner.AddObject(this.Method);
             base.AddToHashCodeCombiner(combiner);
         }
     }

@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
-using TRG.Extensions.DataAccess.Specification;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using System.Threading.Tasks;
+
+    using TRG.Extensions.DataAccess.Specification;
+
     public interface IWritableKeyedRepository<TEntity, TPrimaryKey>
         : IReadableKeyedRepository<TEntity, TPrimaryKey>, IWritableRepository<TEntity>
         where TEntity : class, IKeyedEntity<TPrimaryKey>

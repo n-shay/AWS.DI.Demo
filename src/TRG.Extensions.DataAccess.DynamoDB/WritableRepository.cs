@@ -1,16 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
-using TRG.Extensions.Logging;
-
-namespace TRG.Extensions.DataAccess.DynamoDB
+﻿namespace TRG.Extensions.DataAccess.DynamoDB
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using TRG.Extensions.Logging;
+
     public abstract class WritableRepository<TEntity> :
         ReadableRepository<TEntity>,
         IWritableRepository<TEntity>
         where TEntity : class, IEntity
     {
-        protected WritableRepository(ILogger logger, IDbContext context)
-            : base(logger, context)
+        protected WritableRepository(ILogger logger, IContextProvider<IDbContext> contextProvider)
+            : base(logger, contextProvider)
         {
         }
 
@@ -20,7 +21,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             return new T();
         }
 
-        public async Task Add<T>(T entity)
+        public async Task AddAsync<T>(T entity)
             where T : TEntity
         {
             if (entity == null)
@@ -28,16 +29,16 @@ namespace TRG.Extensions.DataAccess.DynamoDB
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            await Context.SaveAsync(entity);
+            await this.Context.SaveAsync(entity);
         }
 
-        public Task Attach<T>(ref T entity)
+        public Task AttachAsync<T>(ref T entity)
             where T : TEntity
         {
             return Task.CompletedTask;
         }
 
-        public async Task Update<T>(T entity)
+        public async Task UpdateAsync<T>(T entity)
             where T : TEntity
         {
             if (entity == null)
@@ -45,10 +46,10 @@ namespace TRG.Extensions.DataAccess.DynamoDB
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            await Context.SaveAsync(entity);
+            await this.Context.SaveAsync(entity);
         }
 
-        public async Task Delete<T>(T entity)
+        public async Task DeleteAsync<T>(T entity)
             where T : TEntity
         {
             if (entity == null)
@@ -60,11 +61,11 @@ namespace TRG.Extensions.DataAccess.DynamoDB
             if (entity is IDeletableEntity deletableEntity)
             {
                 deletableEntity.IsDeleted = true;
-                await Context.SaveAsync(entity);
+                await this.Context.SaveAsync(entity);
             }
             else
             {
-                await Context.DeleteAsync(entity);
+                await this.Context.DeleteAsync(entity);
             }
         }
     }

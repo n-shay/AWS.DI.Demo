@@ -1,7 +1,7 @@
-﻿using TRG.Extensions.DataAccess.Specification;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using TRG.Extensions.DataAccess.Specification;
+
     public interface IReadableRepository<TEntity> : IRepository
         where TEntity : class, IEntity
     {

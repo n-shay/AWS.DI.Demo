@@ -1,25 +1,25 @@
-﻿using TRG.Extensions.DependencyInjection;
-
-namespace TRG.Extensions.DataAccess.DynamoDB
+﻿namespace TRG.Extensions.DataAccess.DynamoDB
 {
+    using TRG.Extensions.DependencyInjection;
+
     public abstract class UnitOfWork : UnitOfWork<IDbContext>
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider serviceProvider;
 
-        protected UnitOfWork(IDbContext context, IServiceProvider serviceProvider)
-            : base(context)
+        protected UnitOfWork(IContextProvider<IDbContext> contextProvider, IServiceProvider serviceProvider)
+            : base(contextProvider)
         {
-            _serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider;
         }
 
         protected override TRepository InstantiateRepository<TRepository>()
         {
             var rep =
-                _serviceProvider.Resolve<TRepository>();
+                this.serviceProvider.Resolve<TRepository>(this.ContextProvider);
 
             if (rep == null)
                 throw new DependencyResolutionException(typeof(TRepository));
-            
+
             return rep;
         }
     }

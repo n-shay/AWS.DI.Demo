@@ -1,35 +1,37 @@
-﻿using System;
-using TRG.Extensions.Logging;
-
-namespace TRG.Extensions.DataAccess.DynamoDB
+﻿namespace TRG.Extensions.DataAccess.DynamoDB
 {
+    using System;
+
+    using TRG.Extensions.Logging;
+
     public class RepositoryBase : IRepository
     {
-        private bool _isDisposed;
+        private readonly IContextProvider<IDbContext> contextProvider;
+        private bool isDisposed;
 
         protected ILogger Logger { get; }
 
         /// <summary>
         /// The Context.
         /// </summary>
-        protected internal IDbContext Context { get; }
-        
-        protected RepositoryBase(ILogger logger, IDbContext context)
+        protected internal IDbContext Context => this.contextProvider.Get() ?? throw new DynamoDbException("Data access context was not initialized.");
+
+        protected RepositoryBase(ILogger logger, IContextProvider<IDbContext> contextProvider)
         {
-            Logger = logger;
-            Context = context;
+            this.contextProvider = contextProvider;
+            this.Logger = logger;
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         // Protected implementation of Dispose pattern. 
         protected virtual void Dispose(bool disposing)
         {
-            if (_isDisposed)
+            if (this.isDisposed)
             {
                 return;
             }
@@ -39,7 +41,7 @@ namespace TRG.Extensions.DataAccess.DynamoDB
                 // disposing here
             }
 
-            _isDisposed = true;
+            this.isDisposed = true;
         }
     }
 }

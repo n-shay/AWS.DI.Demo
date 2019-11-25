@@ -1,19 +1,19 @@
-﻿using TRG.Extensions.DependencyInjection;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using TRG.Extensions.DependencyInjection;
+
     public class UnitOfWorkFactory : IUnitOfWorkFactory
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider serviceProvider;
 
         public UnitOfWorkFactory(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider;
         }
 
         public TUoW Create<TUoW>() where TUoW : IUnitOfWork
         {
-            return _serviceProvider.Resolve<TUoW>();
+            return this.serviceProvider.Resolve<TUoW>();
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
-using TRG.Extensions.DataAccess.Specification;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using System.Threading.Tasks;
+
+    using TRG.Extensions.DataAccess.Specification;
+
     /// <summary>
     /// Generic repository interface (DDD) for reading and writing domain entities to a storage.
     /// </summary>
@@ -20,25 +21,25 @@ namespace TRG.Extensions.DataAccess
         /// <summary>
         /// Inserts entity to the storage.
         /// </summary>
-        Task Add<T>(T entity)
+        Task AddAsync<T>(T entity)
             where T : TEntity;
 
         /// <summary>
         /// Attaches entity retrieved by external unit of work (or created manually) to the storage.
         /// </summary>
-        Task Attach<T>(ref T entity)
+        Task AttachAsync<T>(ref T entity)
             where T : TEntity;
 
         /// <summary>
         /// Updates entity in the storage.
         /// </summary>
-        Task Update<T>(T entity)
+        Task UpdateAsync<T>(T entity)
             where T : TEntity;
 
         /// <summary>
         /// Deletes entity in the storage.
         /// </summary>
-        Task Delete<T>(T entity)
+        Task DeleteAsync<T>(T entity)
             where T : TEntity;
     }
 

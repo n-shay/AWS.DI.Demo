@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-
-namespace TRG.Extensions.DataAccess.Specification
+﻿namespace TRG.Extensions.DataAccess.Specification
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Generic domain specification result interface that 
     /// contains methods common for filtering the result.

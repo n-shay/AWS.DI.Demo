@@ -1,4 +1,4 @@
-﻿using SimpleInjector;
+﻿using Autofac;
 using TRG.Extensions.DependencyInjection;
 using TRG.Extensions.Lambda;
 
@@ -15,10 +15,6 @@ namespace TRG.Extensions.DataAccess.DynamoDB.Lambda
 
         public class DependencyDescriptor : DynamoDB.DependencyDescriptor
         {
-            protected override Lifestyle GetContextLifestyle()
-            {
-                return LambdaLifestyle.Active;
-            }
         }
     }
 }

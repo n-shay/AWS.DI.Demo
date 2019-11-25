@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using System;
+
     public interface IContext : IDisposable
     {
          

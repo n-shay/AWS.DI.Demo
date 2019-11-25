@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq.Expressions;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using System;
+    using System.Linq.Expressions;
+
     public interface IFluentBulkPartialUpdateDefinition<TEntity>
         where TEntity : class, IEntity
     {

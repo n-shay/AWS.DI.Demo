@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace TRG.Extensions.DataAccess
+﻿namespace TRG.Extensions.DataAccess
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public abstract class UnitOfWork<TContext> : IUnitOfWork
         where TContext : IContext
     {
-        private readonly ConcurrentDictionary<Type, IRepository> _repositoriesContainer = new ConcurrentDictionary<Type, IRepository>();
-        private readonly SemaphoreSlim _mutex = new SemaphoreSlim(1, 1);
-        private bool _isDisposed;
+        private readonly ConcurrentDictionary<Type, IRepository> repositoriesContainer = new ConcurrentDictionary<Type, IRepository>();
+        private readonly SemaphoreSlim mutex = new SemaphoreSlim(1, 1);
+        private bool isDisposed;
 
-        protected TContext CurrentContext;
-        
-        protected UnitOfWork(TContext context)
+        protected IContextProvider<TContext> ContextProvider { get; }
+
+        protected UnitOfWork(IContextProvider<TContext> contextProvider)
         {
-            CurrentContext = context != null
-                ? context
-                : throw new ArgumentNullException(nameof(context));
+            this.ContextProvider = contextProvider;
         }
 
         protected abstract TRepository InstantiateRepository<TRepository>()
@@ -31,61 +29,63 @@ namespace TRG.Extensions.DataAccess
 
             return
                 (TRepository)
-                    _repositoriesContainer.GetOrAdd(type, k => InstantiateRepository<TRepository>());
+                    this.repositoriesContainer.GetOrAdd(type, k => this.InstantiateRepository<TRepository>());
         }
 
         public virtual bool Save()
         {
-            ClearRepositories();
+            this.ClearRepositories();
 
             return true;
         }
 
-        public virtual async Task<bool> SaveAsync()
+        public virtual Task<bool> SaveAsync()
         {
-            return await Task.Run(Save);
+            return Task.FromResult(this.Save());
         }
 
         // Public implementation of Dispose pattern callable by consumers. 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         // Protected implementation of Dispose pattern. 
         protected virtual void Dispose(bool disposing)
         {
-            if (_isDisposed)
+            if (this.isDisposed)
             {
                 return;
             }
 
             if (disposing)
             {
-                ClearRepositories();
+                this.ClearRepositories();
 
-                CurrentContext?.Dispose();
+                this.ContextProvider?.Dispose();
+
+                this.mutex.Dispose();
             }
 
-            _isDisposed = true;
+            this.isDisposed = true;
         }
 
         private void ClearRepositories()
         {
-            _mutex.Wait();
+            this.mutex.Wait();
             try
             {
-                foreach (var repository in _repositoriesContainer.Values)
+                foreach (var repository in this.repositoriesContainer.Values)
                 {
                     repository.Dispose();
                 }
 
-                _repositoriesContainer.Clear();
+                this.repositoriesContainer.Clear();
             }
             finally
             {
-                _mutex.Release();
+                this.mutex.Release();
             }
         }
     }
