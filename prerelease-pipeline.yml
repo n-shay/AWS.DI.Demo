@@ -9,5 +9,4 @@ jobs:
   parameters:
     name: 'Publish PreRelease Packages'
     vmImage: 'ubuntu-latest'
-    nugetConfigPath: './src/.nuget/NuGet.config'
       
